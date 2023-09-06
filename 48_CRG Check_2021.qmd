@@ -1,0 +1,40 @@
+---
+title: "48 domestic v"
+author: "CRG"
+format: html
+editor: visual
+---
+
+```{r}
+
+
+library(readxl)
+dom1<- read_excel("Dallas PD Family Violence (Race Included) 2021.xlsx")
+View(dom1)
+
+str(dom1)
+```
+
+```{r}
+library(dplyr)
+
+dom1 <- dom1 %>%
+  mutate(Ethnicity_Race = paste(`Ethnicity of Victim`, `Race of Victim`, sep = ", "))
+
+dom2 <- dom1 %>%
+  filter(`Family Violence Indicator` == "Yes")
+
+
+incident_count_by_ethnicity_race <- dom2 %>%
+  group_by(Ethnicity_Race) %>%
+  summarise(IncidentCount = n())
+
+print(incident_count_by_ethnicity_race)
+
+excel_file <- "domestic_violence_summary.xlsx"
+
+library(writexl)
+write_xlsx(incident_count_by_ethnicity_race, excel_file)
+
+
+```
